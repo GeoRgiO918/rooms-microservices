@@ -39,7 +39,7 @@ The application provides functionality for **room and booking inventory**.
 
 - There is a **Docker Compose** configuration included that launches external services required for development and testing:
     - **PostgreSQL** (with volume persistence)
-    - **Kafka** (including a Kafka broker and optionally Zookeeper)
+    - **Kafka** 
 - This allows you to run all necessary infrastructure locally without manual installation.
 
 ## TODO / Next Steps
@@ -54,3 +54,4 @@ The application provides functionality for **room and booking inventory**.
 2. Run the external services using the provided Docker Compose file:
    ```bash
    docker-compose up -d
+ 
