@@ -6,7 +6,7 @@
 
     <!-- Общие groupId и version для всех сервисов -->
     <groupId>com.georgiiHadzhiev</groupId>
-    <artifactId>booking-project</artifactId>
+    <artifactId>room-microservices</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 

@@ -18,6 +18,7 @@
             <column name="description" type="varchar(500)"/>
             <column name="type" type="varchar(128)"/>
             <column name="person_count" type="int"/>
+            <column name="version" type="bigint"/>
         </createTable>
     </changeSet>
 

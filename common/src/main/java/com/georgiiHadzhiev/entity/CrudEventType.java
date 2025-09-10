@@ -1,7 +1,9 @@
 package com.georgiiHadzhiev.entity;
 
-public enum EventType {
+public enum CrudEventType {
     CREATED,
+    READ,
+    UPDATED,
     DELETED,
-    UPDATED
+
 }

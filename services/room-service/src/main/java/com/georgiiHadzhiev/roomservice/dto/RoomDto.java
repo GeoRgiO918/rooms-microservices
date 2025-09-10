@@ -1,29 +1,14 @@
-package com.georgiiHadzhiev.roomservice.entity;
+package com.georgiiHadzhiev.roomservice.dto;
 
-import jakarta.persistence.*;
+import com.georgiiHadzhiev.roomservice.entity.RoomType;
 
-@Entity
-@Table(name = "room")
-public class Room {
+public class RoomDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "number")
     private String number;
-
-    @Column(name = "description")
     private String description;
-
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
     private RoomType type;
-
-    @Column(name = "person_count")
     private int personCount;
-
-    @Column(name = "version")
     private Long version;
 
     public Long getId() {
@@ -72,9 +57,5 @@ public class Room {
 
     public void setVersion(Long version) {
         this.version = version;
-    }
-
-    public void incrementVersion(){
-        this.version++;
     }
 }
