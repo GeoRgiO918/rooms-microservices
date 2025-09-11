@@ -4,20 +4,19 @@ import com.georgiiHadzhiev.entity.CrudEventType;
 import com.georgiiHadzhiev.events.BaseEvent;
 import com.georgiiHadzhiev.roomservice.entity.Room;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
-public class RoomEventProvider {
+public class BrokerEventProvider {
 
 
 
-    private RoomEventProducer roomEventProducer;
+    private BrokerEventPublisher brokerEventPublisher;
 
-    public RoomEventProvider(RoomEventProducer roomEventProducer){
-        this.roomEventProducer = roomEventProducer;
+    public BrokerEventProvider(BrokerEventPublisher brokerEventPublisher){
+        this.brokerEventPublisher = brokerEventPublisher;
     }
 
 

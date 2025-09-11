@@ -66,15 +66,16 @@ public class RoomController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Room> deleteRoom(@PathVariable Long id){
-//        Optional<Room> finded = roomRepository.findById(id);
-//        if(finded.isEmpty()) return ResponseEntity.notFound().build();
-//
-//        roomRepository.deleteById(id);
-//        roomEventProvider.roomDeleted(finded.get());
-//
-//        return ResponseEntity.noContent().build();
-        return null;
+    public ResponseEntity<RoomDto> deleteRoom(@PathVariable Long id){
+
+        RoomDto dto;
+        try{
+            dto = roomService.removeRoom(id);
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
 
     }
 

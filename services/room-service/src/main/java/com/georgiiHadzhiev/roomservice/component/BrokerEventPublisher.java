@@ -1,21 +1,27 @@
 package com.georgiiHadzhiev.roomservice.component;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.georgiiHadzhiev.events.BaseEvent;
 import com.georgiiHadzhiev.exceptions.EventPublishingException;
+import com.georgiiHadzhiev.roomservice.dto.RoomApplicationEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
-public class RoomEventProducer {
+public class BrokerEventPublisher {
 
     private final KafkaTemplate<String, BaseEvent> kafkaTemplate;
 
-    public RoomEventProducer(KafkaTemplate<String, BaseEvent> kafkaTemplate) {
+    public BrokerEventPublisher(KafkaTemplate<String, BaseEvent> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void publishRoomEvent(BaseEvent event) {
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void publishRoomEvent(RoomApplicationEvent innerEvent) {
+        BaseEvent event = innerEvent.getOuterEvent();
         if(event.getAggregateId() == null) throw new EventPublishingException(event);
         kafkaTemplate.send("room.events", String.valueOf(event.getAggregateId()), event);
     }
