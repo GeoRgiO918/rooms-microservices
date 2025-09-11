@@ -15,7 +15,7 @@ public class RoomEventProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendRoomEvent(BaseEvent event) {
+    public void publishRoomEvent(BaseEvent event) {
         if(event.getAggregateId() == null) throw new EventPublishingException(event);
         kafkaTemplate.send("room.events", String.valueOf(event.getAggregateId()), event);
     }

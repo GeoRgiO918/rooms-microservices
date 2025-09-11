@@ -24,6 +24,7 @@ public class Room {
     private int personCount;
 
     @Column(name = "version")
+    @Version
     private Long version;
 
     public Long getId() {
