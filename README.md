@@ -1,4 +1,5 @@
-# Event-Driven Microservices Project (2025)
+# Room-microservices
+## Event-Driven Microservices Project (2025)
 
 This is a **microservices project** built on **Spring Boot** with an **event-driven architecture**.
 
@@ -6,8 +7,7 @@ This is a **microservices project** built on **Spring Boot** with an **event-dri
 
 - **Broker:** Apache Kafka
 - **Database:** PostgreSQL (each service uses its own schema if required)
-- **Current limitation:** Schemas need to be created manually.
-    - **TODO:** Automate schema creation/migrations for each service.
+- **Object Storage:** MinIO
 
 The application provides functionality for **room and booking inventory**.
 
@@ -37,21 +37,23 @@ The application provides functionality for **room and booking inventory**.
 
 ## External Dependencies
 
-- There is a **Docker Compose** configuration included that launches external services required for development and testing:
-    - **PostgreSQL** (with volume persistence)
-    - **Kafka** 
-- This allows you to run all necessary infrastructure locally without manual installation.
+The project relies on the following **external containers** started via Docker Compose:
 
-## TODO / Next Steps
+- **PostgreSQL** (with volume persistence)
+- **Kafka**
+- **MinIO**
 
-- Automate creation and migration of database schemas.
-- Implement centralized configuration for Kafka producers and consumers.
-- Add error handling and retry mechanisms for event processing.
+These containers provide the necessary infrastructure for development and testing.
 
 ## Getting Started
 
 1. Ensure Docker and Docker Compose are installed.
-2. Run the external services using the provided Docker Compose file:
+2. Go to the project directory
+3. Build services jar files with project maven wrapper
+   ```bash
+   ./mvnw clean package
+
+4. Run application using the provided Docker Compose file:
    ```bash
    docker-compose up -d
  
