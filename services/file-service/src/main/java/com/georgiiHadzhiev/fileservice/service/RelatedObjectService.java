@@ -1,15 +1,15 @@
 package com.georgiiHadzhiev.fileservice.service;
 
-import com.georgiiHadzhiev.entity.CrudEventType;
-import com.georgiiHadzhiev.events.BaseEvent;
 import com.georgiiHadzhiev.fileservice.component.RelatedObjectMapper;
 import com.georgiiHadzhiev.fileservice.dto.RelatedObjectDto;
 import com.georgiiHadzhiev.fileservice.entity.RelatedObject;
+import com.georgiiHadzhiev.fileservice.repository.FileMetadataRepository;
 import com.georgiiHadzhiev.fileservice.repository.RelatedObjectRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -24,7 +24,7 @@ public class RelatedObjectService {
     }
 
     public boolean exists(RelatedObjectDto dto){
-        Optional<RelatedObject> relatedObject=  repository.findByEntityTypeAndEntityId(dto.getEntityType(), dto.getEntityId());
+        Optional<RelatedObject> relatedObject= findEntityByDto(dto);
         return relatedObject.isPresent();
     }
 
@@ -38,15 +38,23 @@ public class RelatedObjectService {
     }
     @Transactional
     public RelatedObjectDto deleteRelatedObject(RelatedObjectDto dto){
-        Optional<RelatedObject> finded = repository.findByEntityTypeAndEntityId(dto.getEntityType(), dto.getEntityId());
+        Optional<RelatedObject> found = findEntityByDto(dto);
 
 
-        if(finded.isEmpty()) throw new EntityNotFoundException();
-        RelatedObject deleted = finded.get();
-        repository.deleteById(deleted.getId());
+        if(found.isEmpty()) throw new EntityNotFoundException();
+        RelatedObject deleted = found.get();
+        deleted.setDeletedAt(LocalDateTime.now());
+        repository.save(deleted);
 
         return mapper.toDto(deleted);
     }
+
+    @Transactional
+    public Optional<RelatedObject> findEntityByDto(RelatedObjectDto dto){
+        return repository.findByEntityTypeAndEntityIdAndDeletedAtIsNull(dto.getEntityType(), dto.getEntityId());
+    }
+
+
 
 
 }

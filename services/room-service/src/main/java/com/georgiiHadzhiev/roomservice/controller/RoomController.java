@@ -2,7 +2,6 @@ package com.georgiiHadzhiev.roomservice.controller;
 
 
 import com.georgiiHadzhiev.roomservice.dto.RoomDto;
-import com.georgiiHadzhiev.roomservice.entity.Room;
 import com.georgiiHadzhiev.roomservice.service.RoomService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ public class RoomController {
     public ResponseEntity<RoomDto> getRoom(@PathVariable Long id){
         RoomDto dto;
            try {
-           dto = roomService.getRoom(id);
+           dto = roomService.getRoomById(id);
         }catch(EntityNotFoundException e){
 
             return ResponseEntity.notFound().build();
@@ -70,7 +69,7 @@ public class RoomController {
 
         RoomDto dto;
         try{
-            dto = roomService.removeRoom(id);
+            dto = roomService.removeRoomById(id);
 
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

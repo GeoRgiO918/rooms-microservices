@@ -21,6 +21,5 @@ public class S3ClientProperties {
     public String getSecretKey() { return secretKey; }
     public void setSecretKey(String secretKey) { this.secretKey = secretKey; }
 
-    public String getBucket() { return bucket; }
-    public void setBucket(String bucket) { this.bucket = bucket; }
+
 }

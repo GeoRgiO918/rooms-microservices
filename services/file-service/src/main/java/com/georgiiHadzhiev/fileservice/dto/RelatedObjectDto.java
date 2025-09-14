@@ -22,4 +22,12 @@ public class RelatedObjectDto {
     public void setEntityId(String entityId) {
         this.entityId = entityId;
     }
+
+    public RelatedObjectDto(String entityId, String entityType) {
+        this.entityId = entityId;
+        this.entityType = entityType;
+    }
+    public RelatedObjectDto(){
+
+    };
 }

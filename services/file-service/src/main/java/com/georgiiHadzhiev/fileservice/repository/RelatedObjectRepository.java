@@ -7,5 +7,7 @@ import java.util.Optional;
 
 public interface RelatedObjectRepository extends JpaRepository<RelatedObject,Long> {
 
-    public Optional<RelatedObject> findByEntityTypeAndEntityId(String entityType, String entityId);
+    public Optional<RelatedObject> findByEntityTypeAndEntityIdAndDeletedAtIsNull(String entityType, String entityId);
+
+
 }

@@ -3,6 +3,8 @@ package com.georgiiHadzhiev.fileservice.entity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "related_object")
@@ -17,6 +19,9 @@ public class RelatedObject {
 
     @Column(name = "entity_id", nullable = false)
     private String entityId;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     public Long getId() {
         return id;
@@ -40,5 +45,13 @@ public class RelatedObject {
 
     public void setEntityId(String entityId) {
         this.entityId = entityId;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 }

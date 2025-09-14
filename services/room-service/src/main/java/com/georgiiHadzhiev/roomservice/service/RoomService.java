@@ -2,7 +2,6 @@ package com.georgiiHadzhiev.roomservice.service;
 
 import com.georgiiHadzhiev.entity.CrudEventType;
 import com.georgiiHadzhiev.events.BaseEvent;
-import com.georgiiHadzhiev.roomservice.component.BrokerEventPublisher;
 import com.georgiiHadzhiev.roomservice.component.BrokerEventProvider;
 import com.georgiiHadzhiev.roomservice.component.RoomMapper;
 import com.georgiiHadzhiev.roomservice.dto.RoomApplicationEvent;
@@ -69,14 +68,14 @@ public class RoomService {
                 .toList();
     }
 
-    public RoomDto getRoom(long id) {
+    public RoomDto getRoomById(long id) {
         Optional<Room> finded = repository.findById(id);
         if(finded.isEmpty()) throw new EntityNotFoundException();
         return mapper.toDto(finded.get());
     }
 
     @Transactional
-    public RoomDto removeRoom(long id){
+    public RoomDto removeRoomById(long id){
         Optional<Room> finded = repository.findById(id);
 
         if(finded.isEmpty()) throw new EntityNotFoundException();

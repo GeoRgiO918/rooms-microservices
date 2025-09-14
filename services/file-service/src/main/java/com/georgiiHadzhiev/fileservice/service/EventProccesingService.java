@@ -12,11 +12,13 @@ public class EventProccesingService {
 
     private final EventToDtoMapper eventMapper;
     private final RelatedObjectService relatedObjectService;
+    private final FileMetadataService metadataService;
 
 
-    public EventProccesingService(EventToDtoMapper eventMapper,RelatedObjectService relatedObjectService){
+    public EventProccesingService(EventToDtoMapper eventMapper,RelatedObjectService relatedObjectService, FileMetadataService metadataService){
         this.eventMapper = eventMapper;
         this.relatedObjectService =relatedObjectService;
+        this.metadataService = metadataService;
     }
 
 
@@ -33,7 +35,12 @@ public class EventProccesingService {
                 if(!isEntityExists) relatedObjectService.createRelatedObject(dto);
                 return;
             case DELETED:
-                if(isEntityExists) relatedObjectService.deleteRelatedObject(dto);
+                if(isEntityExists) {
+                    metadataService.scheduleFilesForDeletion(dto);
+                    relatedObjectService.deleteRelatedObject(dto);
+
+
+                }
                 return;
             default:
                 throw new EventConsumingException(event);

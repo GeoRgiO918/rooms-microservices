@@ -11,9 +11,6 @@ public class FileMetadata {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "file_url", nullable = false )
-    private String fileUrl;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status" , nullable = false )
     private FileStatus status;
@@ -35,16 +32,14 @@ public class FileMetadata {
     @Column(name = "original_filename")
     private String originalFilename;
 
-    @Column(name = "bucketName" , nullable = false )
-    private String bucketName;
-
+    @Column(name = "object_key")
+    private String objectKey;
 
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getFileUrl() { return fileUrl; }
-    public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
+    public String getFileUrl() { return getBucketName() + "/" + objectKey; }
 
     public FileStatus getStatus() { return status; }
     public void setStatus(FileStatus status) { this.status = status; }
@@ -62,8 +57,21 @@ public class FileMetadata {
     public String getOriginalFilename() { return originalFilename; }
     public void setOriginalFilename(String originalFilename) { this.originalFilename = originalFilename; }
 
-    public String getBucketName() { return bucketName; }
-    public void setBucketName(String bucketName) { this.bucketName = bucketName; }
+    public String getBucketName() {  return (relatedObject.getEntityType() + "bucket").toLowerCase();}
 
+    public String getObjectKey() {
+        return objectKey;
+    }
 
+    public void setObjectKey(String objectKey) {
+        this.objectKey = objectKey;
+    }
+
+    public RelatedObject getRelatedObject() {
+        return relatedObject;
+    }
+
+    public void setRelatedObject(RelatedObject relatedObject) {
+        this.relatedObject = relatedObject;
+    }
 }
