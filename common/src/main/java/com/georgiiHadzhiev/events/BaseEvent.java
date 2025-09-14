@@ -90,4 +90,7 @@ public class BaseEvent {
         this.aggregateType = aggregateType;
         this.aggregateVersion = aggregateVersion;
     }
+
+    public BaseEvent() {
+    }
 }
