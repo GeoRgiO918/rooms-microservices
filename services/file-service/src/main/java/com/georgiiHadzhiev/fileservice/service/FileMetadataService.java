@@ -9,7 +9,7 @@ import com.georgiiHadzhiev.fileservice.entity.FileStatus;
 import com.georgiiHadzhiev.fileservice.entity.RelatedObject;
 import com.georgiiHadzhiev.fileservice.repository.FileMetadataRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -88,5 +88,29 @@ public class FileMetadataService {
         fileMetadata.setStatus(FileStatus.TO_DELETE);
         repository.save(fileMetadata);
         return mapper.toDto(fileMetadata);
+    }
+
+    @Transactional
+    public FileMetadataDto updateFileMetadata(FileMetadataDto dto){
+      long id = dto.getId();
+      Optional<FileMetadata> found = repository.findById(id);
+
+      if(found.isEmpty()) {
+        throw  new EntityNotFoundException("FileMetadata by id:"+ id + " not found");
+      }
+      FileMetadata fileMetadata = mapper.toEntity(dto);
+      fileMetadata = repository.save(fileMetadata);
+
+      return mapper.toDto(fileMetadata);
+
+    };
+
+    @Transactional
+    public List<FileMetadataDto> getFileMetadataToDeleteList(){
+        List<FileMetadata> fileMetadata = repository.findAllByStatus(FileStatus.TO_DELETE);
+
+        return fileMetadata.stream()
+                .map(mapper::toDto)
+                .toList();
     }
 }

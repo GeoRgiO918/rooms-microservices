@@ -30,9 +30,9 @@ public class S3ClientConfig {
                                 AwsBasicCredentials.create(props.getAccessKey(), props.getSecretKey())
                         )
                 )
-                .region(Region.EU_SOUTH_2) // MinIO не использует регион реально
+                .region(Region.EU_SOUTH_2)
                 .serviceConfiguration(S3Configuration.builder()
-                        .pathStyleAccessEnabled(true) // обязательно для MinIO
+                        .pathStyleAccessEnabled(true)
                         .build())
                 .build();
     }

@@ -4,7 +4,7 @@ import com.georgiiHadzhiev.events.BaseEvent;
 import com.georgiiHadzhiev.exceptions.EventConsumingException;
 import com.georgiiHadzhiev.fileservice.component.EventToDtoMapper;
 import com.georgiiHadzhiev.fileservice.dto.RelatedObjectDto;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service

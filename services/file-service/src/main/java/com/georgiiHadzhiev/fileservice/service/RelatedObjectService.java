@@ -6,7 +6,7 @@ import com.georgiiHadzhiev.fileservice.entity.RelatedObject;
 import com.georgiiHadzhiev.fileservice.repository.FileMetadataRepository;
 import com.georgiiHadzhiev.fileservice.repository.RelatedObjectRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

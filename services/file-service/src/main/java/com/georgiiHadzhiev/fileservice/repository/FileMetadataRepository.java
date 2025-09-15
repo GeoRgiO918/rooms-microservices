@@ -17,4 +17,6 @@ public interface FileMetadataRepository extends JpaRepository<FileMetadata,Long>
 
     public Optional<FileMetadata> findByStatusAndId(FileStatus fileStatus, Long id);
 
+    public List<FileMetadata> findAllByStatus(FileStatus fileStatus);
+
 }

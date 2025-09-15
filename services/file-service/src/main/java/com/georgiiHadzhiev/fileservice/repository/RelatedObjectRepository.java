@@ -9,5 +9,6 @@ public interface RelatedObjectRepository extends JpaRepository<RelatedObject,Lon
 
     public Optional<RelatedObject> findByEntityTypeAndEntityIdAndDeletedAtIsNull(String entityType, String entityId);
 
+    public Optional<RelatedObject> findByEntityTypeAndEntityId(String entityType, String entityId);
 
 }
