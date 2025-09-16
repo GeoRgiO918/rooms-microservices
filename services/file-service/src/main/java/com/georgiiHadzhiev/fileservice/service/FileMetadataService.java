@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,8 +70,9 @@ public class FileMetadataService {
 
 
     }
-    public FileMetadataDto getActiveFileMetadataById(long id){
-       FileMetadata fileMetadata = repository.findByStatusAndId(FileStatus.ACTIVE,id)
+    @Transactional
+    public FileMetadataDto getFileMetadataByStatusAndId(FileStatus status,long id){
+       FileMetadata fileMetadata = repository.findByStatusAndId(status,id)
                .orElseThrow(() -> new EntityNotFoundException(
                        "fileMetadata with id:" + id +  " does not exist"
                ));
@@ -106,11 +108,19 @@ public class FileMetadataService {
     };
 
     @Transactional
-    public List<FileMetadataDto> getFileMetadataToDeleteList(){
-        List<FileMetadata> fileMetadata = repository.findAllByStatus(FileStatus.TO_DELETE);
+    public List<FileMetadataDto> findAllFileMetadataByStatus(FileStatus fileStatus){
+        List<FileMetadata> fileMetadata = repository.findAllByStatus(fileStatus);
 
         return fileMetadata.stream()
                 .map(mapper::toDto)
                 .toList();
+    }
+    @Transactional
+    public FileMetadataDto getFileMetadataById(long id){
+        FileMetadata metadata = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "fileMetadata with id:" + id +  " does not exist"
+                ));
+        return mapper.toDto(metadata);
     }
 }

@@ -13,12 +13,6 @@ public class RoomServiceApplication {
 		SpringApplication.run(RoomServiceApplication.class, args);
 	}
 
-	@Bean
-	public NewTopic roomEventsTopic() {
-		return TopicBuilder.name("room.events")
-				.partitions(1)
-				.replicas(1)
-				.build();
-	}
+
 
 }

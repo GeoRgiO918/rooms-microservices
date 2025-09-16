@@ -15,6 +15,7 @@ public class BaseEvent {
     String aggregateId;
     String aggregateType;
     long aggregateVersion;
+    String description;
 
     public String getAuthor() {
         return author;
@@ -72,6 +73,7 @@ public class BaseEvent {
         this.aggregateVersion = aggregateVersion;
     }
 
+
     public String getAggregateType() {
         return aggregateType;
     }
@@ -80,7 +82,15 @@ public class BaseEvent {
         this.aggregateType = aggregateType;
     }
 
-    public BaseEvent(UUID eventId, UUID causationId, String author, LocalDateTime timestamp, CrudEventType type, String aggregateId, String aggregateType, long aggregateVersion) {
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BaseEvent(UUID eventId, UUID causationId, String author, LocalDateTime timestamp, CrudEventType type, String aggregateId, String aggregateType, long aggregateVersion,String description) {
         this.eventId = eventId;
         this.causationId = causationId;
         this.author = author;
@@ -89,6 +99,7 @@ public class BaseEvent {
         this.aggregateId = aggregateId;
         this.aggregateType = aggregateType;
         this.aggregateVersion = aggregateVersion;
+        this.description =description;
     }
 
     public BaseEvent() {

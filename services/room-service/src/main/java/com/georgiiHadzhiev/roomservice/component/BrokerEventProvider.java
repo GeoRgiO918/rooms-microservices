@@ -28,6 +28,7 @@ public class BrokerEventProvider {
                 type,
                 room.getId().toString(),
                 "Room",
-                room.getVersion());
+                room.getVersion(),
+                "Room was " + type + " by " + author);
     }
 }

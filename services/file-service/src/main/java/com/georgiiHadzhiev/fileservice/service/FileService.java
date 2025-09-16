@@ -69,7 +69,7 @@ public class FileService {
 
     public void deleteMarkedFilesFromStorage(){
 
-        List<FileMetadataDto> toDeleteList = fileMetadataService.getFileMetadataToDeleteList();
+        List<FileMetadataDto> toDeleteList = fileMetadataService.findAllFileMetadataByStatus(FileStatus.TO_DELETE);
 
         for(FileMetadataDto dto: toDeleteList){
           removeFromStorage(dto);

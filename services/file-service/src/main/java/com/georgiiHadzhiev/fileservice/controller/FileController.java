@@ -22,7 +22,10 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 
+import java.io.File;
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/file")
@@ -57,7 +60,7 @@ public class FileController {
     @GetMapping("/{id}/download")
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable Long id) {
         try {
-            FileMetadataDto fileMetadata = metadataService.getActiveFileMetadataById(id);
+            FileMetadataDto fileMetadata = metadataService.getFileMetadataByStatusAndId(FileStatus.ACTIVE,id);
             InputStreamResource resource = fileService.getFileInputStream(fileMetadata);
 
             return ResponseEntity.ok()
@@ -80,6 +83,26 @@ public class FileController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(fileMetadataDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FileMetadataDto>> getAllFileMetadata(@RequestParam(required = false) FileStatus status){
+        List<FileMetadataDto> found = metadataService.findAllFileMetadataByStatus(status == null ? FileStatus.ACTIVE: status);
+        if(found.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(found);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FileMetadataDto> getFileMetadata(@PathVariable long id){
+        FileMetadataDto metadata = null;
+        try {
+            metadata = metadataService.getFileMetadataById(id);
+        }catch (EntityNotFoundException e){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(metadata);
     }
 
 
