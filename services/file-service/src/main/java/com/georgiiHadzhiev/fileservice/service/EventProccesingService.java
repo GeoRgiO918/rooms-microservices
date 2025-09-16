@@ -15,27 +15,27 @@ public class EventProccesingService {
     private final FileMetadataService metadataService;
 
 
-    public EventProccesingService(EventToDtoMapper eventMapper,RelatedObjectService relatedObjectService, FileMetadataService metadataService){
+    public EventProccesingService(EventToDtoMapper eventMapper, RelatedObjectService relatedObjectService, FileMetadataService metadataService) {
         this.eventMapper = eventMapper;
-        this.relatedObjectService =relatedObjectService;
+        this.relatedObjectService = relatedObjectService;
         this.metadataService = metadataService;
     }
 
 
     @Transactional
-    public void process(BaseEvent event){
+    public void process(BaseEvent event) {
         RelatedObjectDto dto = eventMapper.fromBaseEvent(event);
         boolean isEntityExists = relatedObjectService.exists(dto);
 
-        switch (event.getType()){
+        switch (event.getType()) {
             case READ:
                 return;
             case CREATED:
             case UPDATED:
-                if(!isEntityExists) relatedObjectService.createRelatedObject(dto);
+                if (!isEntityExists) relatedObjectService.createRelatedObject(dto);
                 return;
             case DELETED:
-                if(isEntityExists) {
+                if (isEntityExists) {
                     metadataService.scheduleFilesForDeletion(dto);
                     relatedObjectService.deleteRelatedObject(dto);
 

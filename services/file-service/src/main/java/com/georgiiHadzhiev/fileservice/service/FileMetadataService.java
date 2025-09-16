@@ -24,14 +24,14 @@ public class FileMetadataService {
     private final FileMetadataRepository repository;
     private final FileMetadataMapper mapper;
 
-    public FileMetadataService(RelatedObjectService relatedObjectService,FileMetadataRepository repository, FileMetadataMapper mapper) {
+    public FileMetadataService(RelatedObjectService relatedObjectService, FileMetadataRepository repository, FileMetadataMapper mapper) {
         this.relatedObjectService = relatedObjectService;
         this.repository = repository;
         this.mapper = mapper;
     }
 
     @Transactional
-    public void scheduleFilesForDeletion(RelatedObjectDto dto){
+    public void scheduleFilesForDeletion(RelatedObjectDto dto) {
         RelatedObject relatedObject = relatedObjectService.findEntityByDto(dto)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "RelatedObject " + dto.getEntityId() + ":" + dto.getEntityType() + " does not exist"
@@ -46,7 +46,7 @@ public class FileMetadataService {
     }
 
     @Transactional
-    public FileMetadataDto createFileMetadataFromFile(MultipartFile file, FileCreateMetadataDto dto){
+    public FileMetadataDto createFileMetadataFromFile(MultipartFile file, FileCreateMetadataDto dto) {
 
         RelatedObjectDto relatedObjectDto = new RelatedObjectDto(dto.getRelatedEntityId(), dto.getRelatedEntityType());
         RelatedObject relatedObject = relatedObjectService.findEntityByDto(relatedObjectDto)
@@ -70,22 +70,23 @@ public class FileMetadataService {
 
 
     }
-    @Transactional
-    public FileMetadataDto getFileMetadataByStatusAndId(FileStatus status,long id){
-       FileMetadata fileMetadata = repository.findByStatusAndId(status,id)
-               .orElseThrow(() -> new EntityNotFoundException(
-                       "fileMetadata with id:" + id +  " does not exist"
-               ));
 
-       return mapper.toDto(fileMetadata);
+    @Transactional
+    public FileMetadataDto getFileMetadataByStatusAndId(FileStatus status, long id) {
+        FileMetadata fileMetadata = repository.findByStatusAndId(status, id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "fileMetadata with id:" + id + " does not exist"
+                ));
+
+        return mapper.toDto(fileMetadata);
 
     }
 
     @Transactional
-    public FileMetadataDto scheduleForDelete(long id){
+    public FileMetadataDto scheduleForDelete(long id) {
         FileMetadata fileMetadata = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "fileMetadata with id:" + id +  " does not exist"
+                        "fileMetadata with id:" + id + " does not exist"
                 ));
         fileMetadata.setStatus(FileStatus.TO_DELETE);
         repository.save(fileMetadata);
@@ -93,34 +94,38 @@ public class FileMetadataService {
     }
 
     @Transactional
-    public FileMetadataDto updateFileMetadata(FileMetadataDto dto){
-      long id = dto.getId();
-      Optional<FileMetadata> found = repository.findById(id);
+    public FileMetadataDto updateFileMetadata(FileMetadataDto dto) {
+        long id = dto.getId();
+        Optional<FileMetadata> found = repository.findById(id);
 
-      if(found.isEmpty()) {
-        throw  new EntityNotFoundException("FileMetadata by id:"+ id + " not found");
-      }
-      FileMetadata fileMetadata = mapper.toEntity(dto);
-      fileMetadata = repository.save(fileMetadata);
+        if (found.isEmpty()) {
+            throw new EntityNotFoundException("FileMetadata by id:" + id + " not found");
+        }
+        FileMetadata fileMetadata = mapper.toEntity(dto);
+        fileMetadata = repository.save(fileMetadata);
 
-      return mapper.toDto(fileMetadata);
+        return mapper.toDto(fileMetadata);
 
-    };
+    }
+
+    ;
 
     @Transactional
-    public List<FileMetadataDto> findAllFileMetadataByStatus(FileStatus fileStatus){
+    public List<FileMetadataDto> findAllFileMetadataByStatus(FileStatus fileStatus) {
         List<FileMetadata> fileMetadata = repository.findAllByStatus(fileStatus);
 
         return fileMetadata.stream()
                 .map(mapper::toDto)
                 .toList();
     }
+
     @Transactional
-    public FileMetadataDto getFileMetadataById(long id){
+    public FileMetadataDto getFileMetadataById(long id) {
         FileMetadata metadata = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "fileMetadata with id:" + id +  " does not exist"
+                        "fileMetadata with id:" + id + " does not exist"
                 ));
         return mapper.toDto(metadata);
     }
+
 }
