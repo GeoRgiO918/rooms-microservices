@@ -51,7 +51,6 @@
         <module>services/room-service</module>
         <module>common</module>
         <module>services/file-service</module>
-        <module>services/chron-worker</module>
     </modules>
 
     <!-- Общие плагины сборки -->
