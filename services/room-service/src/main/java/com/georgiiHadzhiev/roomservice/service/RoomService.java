@@ -61,25 +61,32 @@ public class RoomService {
         return mapper.toDto(saved);
     }
 
+    @Transactional
     public List<RoomDto> getAllRooms() {
+
+        BaseEvent event = eventProvider.provideEmpty(CrudEventType.READ,"USER");
+        innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
         return repository.findAll()
                 .stream()
                 .map(r -> mapper.toDto(r))
                 .toList();
     }
 
+    @Transactional
     public RoomDto getRoomById(long id) {
-        Optional<Room> finded = repository.findById(id);
-        if(finded.isEmpty()) throw new EntityNotFoundException();
-        return mapper.toDto(finded.get());
+        Optional<Room> found = repository.findById(id);
+        if(found.isEmpty()) throw new EntityNotFoundException();
+        BaseEvent event = eventProvider.provide(found.get(),CrudEventType.READ,"USER");
+        innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
+        return mapper.toDto(found.get());
     }
 
     @Transactional
     public RoomDto removeRoomById(long id){
-        Optional<Room> finded = repository.findById(id);
+        Optional<Room> found = repository.findById(id);
 
-        if(finded.isEmpty()) throw new EntityNotFoundException();
-        Room deleted = finded.get();
+        if(found.isEmpty()) throw new EntityNotFoundException();
+        Room deleted = found.get();
         repository.deleteById(id);
         BaseEvent event = eventProvider.provide(deleted,CrudEventType.DELETED,"USER");
         innerEventPublisher.publishEvent(new RoomApplicationEvent(event));

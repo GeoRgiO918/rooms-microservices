@@ -31,4 +31,16 @@ public class BrokerEventProvider {
                 room.getVersion(),
                 "Room was " + type + " by " + author);
     }
+
+    public BaseEvent provideEmpty(CrudEventType type, String author){
+        return  new BaseEvent(UUID.randomUUID(),
+                null,
+                author,
+                LocalDateTime.now(),
+                type,
+                null,
+                "Room",
+                0,
+                "EMPTY");
+    }
 }

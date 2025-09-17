@@ -68,6 +68,7 @@ services:
       - ./logstash/config/pipelines.yml:/opt/bitnami/logstash/config/pipelines.yml:ro
       - ./logstash/pipeline/:/opt/bitnami/logstash/pipeline/:ro
       - log_data:/logs:ro
+    command: ["logstash", "-r"]
 
   kibana:
     image: bitnami/kibana:8

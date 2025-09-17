@@ -8,6 +8,7 @@ This is a **microservices project** built on **Spring Boot** with an **event-dri
 - **Broker:** Apache Kafka
 - **Database:** PostgreSQL (each service uses its own schema if required)
 - **Object Storage:** MinIO
+- **Logging/Monitoring:** ELK Stack (Elasticsearch, Logstash, Kibana)
 
 The application provides functionality for **room and booking inventory**.
 
@@ -35,6 +36,12 @@ The application provides functionality for **room and booking inventory**.
 - **Extensible design:**  
   The event model allows new services to easily subscribe to existing events or publish new ones.
 
+- **Centralized logging:**  
+  The project uses an **ELK stack** for log collection and visualization:
+    - Logstash collects logs and events from services via pipelines.
+    - Elasticsearch stores and indexes logs and events in different indexes.
+    - Kibana provides a UI to explore logs.
+
 ## External Dependencies
 
 The project relies on the following **external containers** started via Docker Compose:
@@ -42,6 +49,7 @@ The project relies on the following **external containers** started via Docker C
 - **PostgreSQL** (with volume persistence)
 - **Kafka**
 - **MinIO**
+- **ELK Stack** (optional for logging)
 
 These containers provide the necessary infrastructure for development and testing.
 
@@ -52,8 +60,3 @@ These containers provide the necessary infrastructure for development and testin
 3. Build services jar files with project maven wrapper
    ```bash
    ./mvnw clean package
-
-4. Run application using the provided Docker Compose file:
-   ```bash
-   docker-compose up -d
- 
