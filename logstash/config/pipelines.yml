@@ -1,0 +1,5 @@
+- pipeline.id: logs
+  path.config: "/opt/bitnami/logstash/pipeline/logs.conf"
+
+- pipeline.id: events
+  path.config: "/opt/bitnami/logstash/pipeline/events.conf"

@@ -47,6 +47,36 @@ services:
     volumes:
       - minio_data:/data
 
+  elasticsearch:
+    image: bitnami/elasticsearch:8
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ELASTIC_PASSWORD=developerdocker logs -f logstash
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  logstash:
+    image: bitnami/logstash:8
+    container_name: logstash
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./logstash/config/pipelines.yml:/opt/bitnami/logstash/config/pipelines.yml:ro
+      - ./logstash/pipeline/:/opt/bitnami/logstash/pipeline/:ro
+      - log_data:/logs:ro
+
+  kibana:
+    image: bitnami/kibana:8
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+
   room-service:
     build:
       context: ./services/room-service
@@ -79,6 +109,8 @@ services:
       - minio
     volumes:
       - log_data:/usr/src/file-service/logs
+
+
 volumes:
   pgdata:
   kafka_data:
@@ -87,3 +119,4 @@ volumes:
     driver: local
   log_data:
     driver: local
+  esdata:
