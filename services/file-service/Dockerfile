@@ -1,8 +1,8 @@
 FROM amazoncorretto:17
 
-WORKDIR /usr/src/fileservice
+WORKDIR /usr/src/file-service
 
-COPY target/file-service.jar /usr/src/fileservice
+COPY target/file-service.jar /usr/src/file-service
 
 
 

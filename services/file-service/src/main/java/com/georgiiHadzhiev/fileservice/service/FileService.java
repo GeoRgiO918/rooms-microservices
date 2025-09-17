@@ -6,6 +6,8 @@ import com.georgiiHadzhiev.fileservice.dto.RelatedObjectDto;
 import com.georgiiHadzhiev.fileservice.entity.FileMetadata;
 import com.georgiiHadzhiev.fileservice.entity.FileStatus;
 import com.georgiiHadzhiev.fileservice.repository.FileMetadataRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ public class FileService {
 
     private final S3Client s3Client;
     private final FileMetadataService fileMetadataService;
+
+
 
     public FileService(S3Client s3Client, FileMetadataService fileMetadataService) {
         this.s3Client = s3Client;

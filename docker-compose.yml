@@ -60,6 +60,8 @@ services:
     depends_on:
       - postgres
       - kafka
+    volumes:
+      - log_data:/usr/src/room-service/logs
 
   file-service:
     build:
@@ -75,10 +77,13 @@ services:
       - postgres
       - kafka
       - minio
-
+    volumes:
+      - log_data:/usr/src/file-service/logs
 volumes:
   pgdata:
   kafka_data:
     driver: local
   minio_data:
+    driver: local
+  log_data:
     driver: local

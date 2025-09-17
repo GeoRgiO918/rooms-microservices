@@ -22,5 +22,9 @@ public class FileCreateMetadataDto {
     public void setRelatedEntityId(String relatedEntityId) {
         this.relatedEntityId = relatedEntityId;
     }
+
+    public String getEntityKey(){
+        return getRelatedEntityType() + " " +getRelatedEntityId();
+    }
 }
 

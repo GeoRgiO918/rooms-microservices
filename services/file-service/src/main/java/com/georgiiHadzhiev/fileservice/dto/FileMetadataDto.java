@@ -84,4 +84,8 @@ public class FileMetadataDto {
     public void setSizeBytes(Long sizeBytes) {
         this.sizeBytes = sizeBytes;
     }
+
+    public String getEntityKey(){
+        return getRelatedEntityType() + " " +getRelatedEntityId();
+    }
 }
