@@ -57,7 +57,7 @@ public class RoomService {
         BaseEvent event = eventProvider.provide(saved,CrudEventType.UPDATED,"USER");
         innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
 
-
+        repository.flush();
         return mapper.toDto(saved);
     }
 

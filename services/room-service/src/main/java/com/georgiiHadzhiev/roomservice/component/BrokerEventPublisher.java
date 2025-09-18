@@ -24,7 +24,8 @@ public class BrokerEventPublisher {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void publishRoomEvent(RoomApplicationEvent innerEvent) {
         BaseEvent event = innerEvent.getOuterEvent();
-        if(event.getAggregateId() == null) throw new EventPublishingException(event);
+       String aggregateId = "0";
+        if(event.getAggregateId() != null) aggregateId = event.getAggregateId();
         kafkaTemplate.send("room.events", String.valueOf(event.getAggregateId()), event);
         log.info("Successfully sent room event",event);
     }

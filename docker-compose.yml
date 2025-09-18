@@ -53,7 +53,7 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - ELASTIC_PASSWORD=developerdocker logs -f logstash
+      - ELASTIC_PASSWORD=developer
     ports:
       - "9200:9200"
     volumes:
