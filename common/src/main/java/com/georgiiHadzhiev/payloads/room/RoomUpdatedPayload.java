@@ -19,7 +19,6 @@ public class RoomUpdatedPayload implements Payload {
     private Integer personCount;
     private Boolean personCountChanged;
 
-    // Конструктор
     public RoomUpdatedPayload() {}
 
     // Геттеры и сеттеры

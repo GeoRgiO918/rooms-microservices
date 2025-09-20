@@ -47,4 +47,7 @@ public class RoomCreatedPayload  implements Payload {
         this.roomType = roomType;
         this.personCount = personCount;
     }
+
+    public RoomCreatedPayload() {
+    }
 }

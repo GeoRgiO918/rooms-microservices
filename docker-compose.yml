@@ -6,6 +6,7 @@ services:
     image: postgres:15
     container_name: room-test-db
     restart: unless-stopped
+    mem_limit: 512M
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: developer
@@ -19,11 +20,11 @@ services:
   kafka:
     image: bitnami/kafka:4.0.0
     container_name: kafka
+    mem_limit: 512M
     environment:
       KAFKA_CFG_NODE_ID: 0
       KAFKA_CFG_PROCESS_ROLES: controller,broker
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
-      # Listeners
       KAFKA_CFG_LISTENERS: DOCKER://:9092,CONTROLLER://:9093,EXTERNAL://:9094
       KAFKA_CFG_ADVERTISED_LISTENERS: DOCKER://kafka:9092,EXTERNAL://localhost:9094
       KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,EXTERNAL:PLAINTEXT
@@ -38,19 +39,21 @@ services:
   minio:
     image: minio/minio:RELEASE.2025-09-07T16-13-09Z-cpuv1
     container_name: minio
+    mem_limit: 256M
     environment:
       MINIO_ROOT_USER: developer
       MINIO_ROOT_PASSWORD: developer
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9000"   # API
-      - "9001:9001"   # Web UI
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
 
   elasticsearch:
     image: bitnami/elasticsearch:8
     container_name: elasticsearch
+    mem_limit: 1024M
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
@@ -60,9 +63,11 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
 
+
   logstash:
     image: bitnami/logstash:8
     container_name: logstash
+    mem_limit: 512M
     depends_on:
       - elasticsearch
     volumes:
@@ -71,9 +76,13 @@ services:
       - log_data:/logs:ro
     command: ["logstash", "-r"]
 
+
   kibana:
     image: bitnami/kibana:8
     container_name: kibana
+    mem_limit: 512M
+    environment:
+      NODE_OPTIONS: "--max-old-space-size=512" # в мегабайтах
     depends_on:
       - elasticsearch
     ports:
@@ -84,6 +93,7 @@ services:
       context: ./services/room-service
       dockerfile: Dockerfile
     container_name: room-service
+    mem_limit: 256M
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookingdb
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
@@ -95,11 +105,13 @@ services:
     volumes:
       - log_data:/usr/src/room-service/logs
 
+
   file-service:
     build:
       context: ./services/file-service
       dockerfile: Dockerfile
     container_name: file-service
+    mem_limit: 256M
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookingdb
       SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
@@ -111,7 +123,6 @@ services:
       - minio
     volumes:
       - log_data:/usr/src/file-service/logs
-
 
 volumes:
   pgdata:
