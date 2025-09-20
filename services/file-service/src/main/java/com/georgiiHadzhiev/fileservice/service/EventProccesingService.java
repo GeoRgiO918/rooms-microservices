@@ -4,6 +4,7 @@ import com.georgiiHadzhiev.events.BaseEvent;
 import com.georgiiHadzhiev.exceptions.EventConsumingException;
 import com.georgiiHadzhiev.fileservice.component.EventToDtoMapper;
 import com.georgiiHadzhiev.fileservice.dto.RelatedObjectDto;
+import com.georgiiHadzhiev.payloads.Payload;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -23,18 +24,18 @@ public class EventProccesingService {
 
 
     @Transactional
-    public void process(BaseEvent event) {
+    public void process(BaseEvent<? extends Payload> event) {
         RelatedObjectDto dto = eventMapper.fromBaseEvent(event);
         boolean isEntityExists = relatedObjectService.exists(dto);
 
-        switch (event.getType()) {
-            case READ:
+        switch (event.getEventType()) {
+            case ROOM_VIEWED:
                 return;
-            case CREATED:
-            case UPDATED:
+            case ROOM_CREATED:
+            case ROOM_UPDATED:
                 if (!isEntityExists) relatedObjectService.createRelatedObject(dto);
                 return;
-            case DELETED:
+            case ROOM_DELETED:
                 if (isEntityExists) {
                     metadataService.scheduleFilesForDeletion(dto);
                     relatedObjectService.deleteRelatedObject(dto);

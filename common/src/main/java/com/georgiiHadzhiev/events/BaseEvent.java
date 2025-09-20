@@ -1,44 +1,57 @@
 package com.georgiiHadzhiev.events;
 
-import com.georgiiHadzhiev.entity.CrudEventType;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.georgiiHadzhiev.entity.EventType;
+import com.georgiiHadzhiev.payloads.Payload;
+import com.georgiiHadzhiev.payloads.room.RoomCreatedPayload;
+import com.georgiiHadzhiev.payloads.room.RoomUpdatedPayload;
+import com.georgiiHadzhiev.payloads.room.RoomViewedPayload;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class BaseEvent {
+public class BaseEvent<T extends Payload> {
 
     UUID eventId;
     UUID causationId;
-    String author;
-    LocalDateTime timestamp;
-    CrudEventType type;
+    String sourceService;
+    Instant timestamp;
     String aggregateId;
     String aggregateType;
     long aggregateVersion;
     String description;
+    EventType eventType;
+    String userId;
 
-    public String getAuthor() {
-        return author;
+    @JsonTypeInfo(
+            use = JsonTypeInfo.Id.NAME,
+            include = JsonTypeInfo.As.EXTERNAL_PROPERTY, // <-- ключевой момент
+            property = "eventType"                      // <-- смотри в eventType
+    )
+    @JsonSubTypes({
+            @JsonSubTypes.Type(value = RoomCreatedPayload.class, name = "ROOM_CREATED"),
+            @JsonSubTypes.Type(value = RoomUpdatedPayload.class, name = "ROOM_UPDATED"),
+            @JsonSubTypes.Type(value = RoomCreatedPayload.class, name = "ROOM_DELETED"),
+            @JsonSubTypes.Type(value = RoomViewedPayload.class, name = "ROOM_VIEWED")
+    })
+    T payload;
+
+    public String getSourceService() {
+        return sourceService;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setSourceService(String sourceService) {
+        this.sourceService = sourceService;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public CrudEventType getType() {
-        return type;
-    }
-
-    public void setType(CrudEventType type) {
-        this.type = type;
     }
 
     public UUID getEventId() {
@@ -90,16 +103,42 @@ public class BaseEvent {
         this.description = description;
     }
 
-    public BaseEvent(UUID eventId, UUID causationId, String author, LocalDateTime timestamp, CrudEventType type, String aggregateId, String aggregateType, long aggregateVersion,String description) {
+    public T getPayload() {
+        return payload;
+    }
+
+    public void setPayload(T payload) {
+        this.payload = payload;
+    }
+
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public BaseEvent(UUID eventId, UUID causationId, String sourceService, Instant timestamp, String aggregateId, String aggregateType, long aggregateVersion, String description, EventType eventType, T payload,String userId) {
         this.eventId = eventId;
         this.causationId = causationId;
-        this.author = author;
+        this.sourceService = sourceService;
         this.timestamp = timestamp;
-        this.type = type;
         this.aggregateId = aggregateId;
         this.aggregateType = aggregateType;
         this.aggregateVersion = aggregateVersion;
         this.description =description;
+        this.eventType = eventType;
+        this.payload = payload;
+        this.userId = userId;
     }
 
     public BaseEvent() {

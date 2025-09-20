@@ -2,7 +2,12 @@ package com.georgiiHadzhiev.roomservice.service;
 
 import com.georgiiHadzhiev.entity.CrudEventType;
 import com.georgiiHadzhiev.events.BaseEvent;
-import com.georgiiHadzhiev.roomservice.component.BrokerEventProvider;
+import com.georgiiHadzhiev.payloads.Payload;
+import com.georgiiHadzhiev.payloads.room.RoomCreatedPayload;
+import com.georgiiHadzhiev.payloads.room.RoomDeletedPayload;
+import com.georgiiHadzhiev.payloads.room.RoomUpdatedPayload;
+import com.georgiiHadzhiev.payloads.room.RoomViewedPayload;
+import com.georgiiHadzhiev.roomservice.component.BrokerEventFactory;
 import com.georgiiHadzhiev.roomservice.component.RoomMapper;
 import com.georgiiHadzhiev.roomservice.dto.RoomApplicationEvent;
 import com.georgiiHadzhiev.roomservice.dto.RoomDto;
@@ -10,6 +15,7 @@ import com.georgiiHadzhiev.roomservice.entity.Room;
 import com.georgiiHadzhiev.roomservice.repository.RoomRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +26,11 @@ import java.util.Optional;
 public class RoomService {
 
     private final RoomRepository repository;
-    private final BrokerEventProvider eventProvider;
+    private final BrokerEventFactory eventProvider;
     private final RoomMapper mapper;
     private final ApplicationEventPublisher innerEventPublisher;
 
-    public RoomService(RoomRepository repository, BrokerEventProvider eventProvider,RoomMapper mapper, ApplicationEventPublisher innerEventPublisher) {
+    public RoomService(RoomRepository repository, BrokerEventFactory eventProvider, RoomMapper mapper, ApplicationEventPublisher innerEventPublisher) {
         this.repository = repository;
         this.eventProvider = eventProvider;
         this.mapper = mapper;
@@ -37,7 +43,7 @@ public class RoomService {
         Room room = mapper.toEntity(dto);
         room = repository.save(room);
 
-        BaseEvent event = eventProvider.provide(room,CrudEventType.CREATED,"USER");
+        BaseEvent<RoomCreatedPayload> event = eventProvider.createRoomCreated(room);
         innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
 
         return mapper.toDto(room);
@@ -52,19 +58,21 @@ public class RoomService {
 
         if(finded.isEmpty()) throw new EntityNotFoundException();
         Room saved = mapper.toEntity(dto);
+
+        Room oldRoom = new Room();
+        BeanUtils.copyProperties(finded.get(), oldRoom); // старое состояние
         saved = repository.save(saved);
 
-        BaseEvent event = eventProvider.provide(saved,CrudEventType.UPDATED,"USER");
-        innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
-
+        BaseEvent<RoomUpdatedPayload> event = eventProvider.createRoomUpdated(oldRoom,saved);
         repository.flush();
+        innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
         return mapper.toDto(saved);
     }
 
     @Transactional
     public List<RoomDto> getAllRooms() {
 
-        BaseEvent event = eventProvider.provideEmpty(CrudEventType.READ,"USER");
+        BaseEvent<RoomViewedPayload> event = eventProvider.createAllRoomViewed();
         innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
         return repository.findAll()
                 .stream()
@@ -76,7 +84,7 @@ public class RoomService {
     public RoomDto getRoomById(long id) {
         Optional<Room> found = repository.findById(id);
         if(found.isEmpty()) throw new EntityNotFoundException();
-        BaseEvent event = eventProvider.provide(found.get(),CrudEventType.READ,"USER");
+        BaseEvent<RoomViewedPayload> event = eventProvider.createRoomViewed(found.get());
         innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
         return mapper.toDto(found.get());
     }
@@ -88,7 +96,7 @@ public class RoomService {
         if(found.isEmpty()) throw new EntityNotFoundException();
         Room deleted = found.get();
         repository.deleteById(id);
-        BaseEvent event = eventProvider.provide(deleted,CrudEventType.DELETED,"USER");
+        BaseEvent<RoomDeletedPayload> event = eventProvider.createRoomDeleted(deleted);
         innerEventPublisher.publishEvent(new RoomApplicationEvent(event));
 
         return mapper.toDto(deleted);

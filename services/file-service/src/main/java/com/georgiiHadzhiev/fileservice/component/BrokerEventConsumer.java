@@ -23,7 +23,7 @@ public class BrokerEventConsumer {
     }
 
     @KafkaListener(topics = "room.events")
-    void listener(@Payload BaseEvent event,
+    void listener(@Payload BaseEvent<? extends com.georgiiHadzhiev.payloads.Payload> event,
                   Acknowledgment acknowledgment
                 ){
         log.info("Received event:",event);

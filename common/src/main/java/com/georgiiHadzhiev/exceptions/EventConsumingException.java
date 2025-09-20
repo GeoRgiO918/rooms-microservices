@@ -20,11 +20,11 @@ public class EventConsumingException  extends RuntimeException{
                 "Error consuming event: [eventId=%s, causationId=%s, type=%s, aggregateType=%s, aggregateId=%s, version=%d, author=%s, timestamp=%s]",
                 event.getEventId(),
                 event.getCausationId(),
-                event.getType(),
+                event.getEventType(),
                 event.getAggregateType(),
                 event.getAggregateId(),
                 event.getAggregateVersion(),
-                event.getAuthor(),
+                event.getSourceService(),
                 event.getTimestamp()
         );
     }

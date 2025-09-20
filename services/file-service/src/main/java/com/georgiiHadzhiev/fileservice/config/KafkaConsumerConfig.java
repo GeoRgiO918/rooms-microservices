@@ -1,6 +1,7 @@
 package com.georgiiHadzhiev.fileservice.config;
 
 import com.georgiiHadzhiev.events.BaseEvent;
+import com.georgiiHadzhiev.payloads.Payload;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +30,7 @@ public class KafkaConsumerConfig {
 
 
     @Bean
-    public ConsumerFactory<String, BaseEvent> consumerFactory() {
+    public ConsumerFactory<String, BaseEvent<? extends Payload>> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -38,14 +39,14 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, group);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         // тут фиксируем нужный тип
-        return new DefaultKafkaConsumerFactory<String,BaseEvent>(
+        return new DefaultKafkaConsumerFactory<String,BaseEvent<? extends Payload>>(
                 props);
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, BaseEvent> kafkaListenerContainerFactory(
-            ConsumerFactory<String, BaseEvent> baseEventConsumerFactory) {
-        ConcurrentKafkaListenerContainerFactory<String, BaseEvent> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, BaseEvent<? extends Payload>> kafkaListenerContainerFactory(
+            ConsumerFactory<String, BaseEvent<? extends Payload>> baseEventConsumerFactory) {
+        ConcurrentKafkaListenerContainerFactory<String, BaseEvent<? extends Payload>> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(baseEventConsumerFactory);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
