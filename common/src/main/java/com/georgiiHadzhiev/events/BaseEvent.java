@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.georgiiHadzhiev.entity.EventType;
 import com.georgiiHadzhiev.payloads.Payload;
+import com.georgiiHadzhiev.payloads.fileservice.*;
 import com.georgiiHadzhiev.payloads.roomservice.RoomCreatedPayload;
 import com.georgiiHadzhiev.payloads.roomservice.RoomUpdatedPayload;
 import com.georgiiHadzhiev.payloads.roomservice.RoomViewedPayload;
@@ -34,8 +35,16 @@ public class BaseEvent<T extends Payload> {
             @JsonSubTypes.Type(value = RoomCreatedPayload.class, name = "ROOM_CREATED"),
             @JsonSubTypes.Type(value = RoomUpdatedPayload.class, name = "ROOM_UPDATED"),
             @JsonSubTypes.Type(value = RoomCreatedPayload.class, name = "ROOM_DELETED"),
-            @JsonSubTypes.Type(value = RoomViewedPayload.class, name = "ROOM_VIEWED")
+            @JsonSubTypes.Type(value = RoomViewedPayload.class, name = "ROOM_VIEWED"),
+            @JsonSubTypes.Type(value = FileUploadedPayload.class, name = "FILE_UPLOADED"),
+            @JsonSubTypes.Type(value = RelatedObjectCreatedPayload.class, name = "RELATED_OBJECT_CREATED"),
+            @JsonSubTypes.Type(value = RelatedObjectSoftDeletedPayload.class, name = "RELATED_OBJECT_SOFT_DELETED"),
+            @JsonSubTypes.Type(value = FileSoftDeletedPayload.class, name = "FILE_SOFT_DELETED"),
+            @JsonSubTypes.Type(value = FileMetadataViewedPayload.class, name = "FILEMETADATA_VIEWED"),
+            @JsonSubTypes.Type(value = FileDownloadedPayload.class, name = "FILE_DOWNLOADED"),
+            @JsonSubTypes.Type(value = FileDeletedPayload.class, name = "FILE_DELETED"),
     })
+
     T payload;
 
     public String getSourceService() {

@@ -1,5 +1,6 @@
 package com.georgiiHadzhiev.roomservice.component;
 
+import com.georgiiHadzhiev.components.AbstractPayloadFactory;
 import com.georgiiHadzhiev.payloads.roomservice.RoomCreatedPayload;
 import com.georgiiHadzhiev.payloads.roomservice.RoomUpdatedPayload;
 import com.georgiiHadzhiev.roomservice.entity.Room;
@@ -9,7 +10,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 @Component
-public class RoomPayloadFactory {
+public class RoomPayloadFactory extends AbstractPayloadFactory {
 
 
 
@@ -30,9 +31,4 @@ public class RoomPayloadFactory {
         return payload;
     }
 
-    private <T> void setIfChanged(T oldValue, T newValue, Consumer<T> setter) {
-        if (!Objects.equals(oldValue, newValue)) {
-            setter.accept(newValue);
-        }
-    }
 }

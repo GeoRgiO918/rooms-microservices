@@ -28,6 +28,6 @@ public class BrokerEventPublisher {
         String aggregateId = "0";
         if(event.getAggregateId() != null) aggregateId = event.getAggregateId();
         kafkaTemplate.send(event.getTopic(), String.valueOf(event.getAggregateId()), event);
-        log.info("Successfully sent room event",event);
+        log.info("Successfully sent file event",event);
     }
 }

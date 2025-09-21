@@ -2,7 +2,6 @@ package com.georgiiHadzhiev.fileservice.controller;
 
 import com.georgiiHadzhiev.fileservice.dto.FileCreateMetadataDto;
 import com.georgiiHadzhiev.fileservice.dto.FileMetadataDto;
-import com.georgiiHadzhiev.fileservice.entity.FileMetadata;
 import com.georgiiHadzhiev.fileservice.entity.FileStatus;
 import com.georgiiHadzhiev.fileservice.service.FileMetadataService;
 import com.georgiiHadzhiev.fileservice.service.FileService;
@@ -64,7 +63,6 @@ public class FileController {
         try {
             FileMetadataDto fileMetadata = metadataService.getFileMetadataByStatusAndId(FileStatus.ACTIVE, id);
             InputStreamResource resource = fileService.getFileInputStream(fileMetadata);
-
             log.info("File download prepared: {}", id);
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileMetadata.getOriginalFilename() + "\"")
@@ -78,7 +76,7 @@ public class FileController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<FileMetadataDto> softdeleteFile(@PathVariable Long id) {
+    public ResponseEntity<FileMetadataDto> softDeleteFile(@PathVariable Long id) {
         log.info("Received soft delete request for file: {}", id);
         try {
             FileMetadataDto fileMetadataDto = metadataService.scheduleForDelete(id);
