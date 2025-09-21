@@ -62,3 +62,6 @@ These containers provide the necessary infrastructure for development and testin
 3. Build services jar files with project maven wrapper
    ```bash
    ./mvnw clean package
+4. Run application using the provided Docker Compose file:
+   ```bash
+   docker-compose up -d
