@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.georgiiHadzhiev.entity.EventType;
 import com.georgiiHadzhiev.payloads.Payload;
-import com.georgiiHadzhiev.payloads.room.RoomCreatedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomUpdatedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomViewedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomCreatedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomUpdatedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomViewedPayload;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class BaseEvent<T extends Payload> {
@@ -24,6 +23,7 @@ public class BaseEvent<T extends Payload> {
     String description;
     EventType eventType;
     String userId;
+    String topic;
 
     @JsonTypeInfo(
             use = JsonTypeInfo.Id.NAME,
@@ -127,7 +127,15 @@ public class BaseEvent<T extends Payload> {
         this.userId = userId;
     }
 
-    public BaseEvent(UUID eventId, UUID causationId, String sourceService, Instant timestamp, String aggregateId, String aggregateType, long aggregateVersion, String description, EventType eventType, T payload,String userId) {
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public BaseEvent(UUID eventId, UUID causationId, String sourceService, Instant timestamp, String aggregateId, String aggregateType, long aggregateVersion, String description, EventType eventType, T payload, String userId,String topic) {
         this.eventId = eventId;
         this.causationId = causationId;
         this.sourceService = sourceService;
@@ -139,6 +147,7 @@ public class BaseEvent<T extends Payload> {
         this.eventType = eventType;
         this.payload = payload;
         this.userId = userId;
+        this.topic = topic;
     }
 
     public BaseEvent() {

@@ -1,12 +1,10 @@
 package com.georgiiHadzhiev.roomservice.service;
 
-import com.georgiiHadzhiev.entity.CrudEventType;
 import com.georgiiHadzhiev.events.BaseEvent;
-import com.georgiiHadzhiev.payloads.Payload;
-import com.georgiiHadzhiev.payloads.room.RoomCreatedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomDeletedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomUpdatedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomViewedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomCreatedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomDeletedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomUpdatedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomViewedPayload;
 import com.georgiiHadzhiev.roomservice.component.BrokerEventFactory;
 import com.georgiiHadzhiev.roomservice.component.RoomMapper;
 import com.georgiiHadzhiev.roomservice.dto.RoomApplicationEvent;

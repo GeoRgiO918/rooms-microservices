@@ -1,10 +1,7 @@
 package com.georgiiHadzhiev.roomservice.component;
 
-import com.georgiiHadzhiev.entity.EventType;
-import com.georgiiHadzhiev.exceptions.UnsupportedEventType;
-import com.georgiiHadzhiev.payloads.Payload;
-import com.georgiiHadzhiev.payloads.room.RoomCreatedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomUpdatedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomCreatedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.RoomUpdatedPayload;
 import com.georgiiHadzhiev.roomservice.entity.Room;
 import org.springframework.stereotype.Component;
 

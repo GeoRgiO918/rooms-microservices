@@ -1,0 +1,19 @@
+Events flow
+Action:
+    Room created ->
+        room-service:
+            RoomCreatedEvent ->
+                file-service
+    Room updated ->
+        room-service:
+            RoomUpdatedEvent ->
+                file-service
+    Room deleted ->
+        room-service:
+            RoomDeletedEvent ->
+                file-service:
+                    FileSoftDeletedEvent
+    Room viewed ->
+        room-service:
+            RoomViewedEvent
+

@@ -1,10 +1,10 @@
-package com.georgiiHadzhiev.roomservice.component;
+package com.georgiiHadzhiev.fileservice.component;
 
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.georgiiHadzhiev.events.BaseEvent;
 import com.georgiiHadzhiev.exceptions.EventPublishingException;
+import com.georgiiHadzhiev.fileservice.dto.FileApplicationEvent;
 import com.georgiiHadzhiev.payloads.Payload;
-import com.georgiiHadzhiev.roomservice.dto.RoomApplicationEvent;
 import com.georgiiHadzhiev.utils.JsonLogger;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -23,9 +23,9 @@ public class BrokerEventPublisher {
 
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void publishRoomEvent(RoomApplicationEvent innerEvent) {
+    public void publishRoomEvent(FileApplicationEvent innerEvent) {
         BaseEvent<? extends Payload> event = innerEvent.getOuterEvent();
-       String aggregateId = "0";
+        String aggregateId = "0";
         if(event.getAggregateId() != null) aggregateId = event.getAggregateId();
         kafkaTemplate.send(event.getTopic(), String.valueOf(event.getAggregateId()), event);
         log.info("Successfully sent room event",event);

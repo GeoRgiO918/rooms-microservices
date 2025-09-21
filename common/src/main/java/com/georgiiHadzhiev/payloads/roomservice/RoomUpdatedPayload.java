@@ -1,4 +1,4 @@
-package com.georgiiHadzhiev.payloads.room;
+package com.georgiiHadzhiev.payloads.roomservice;
 
 import com.georgiiHadzhiev.payloads.Payload;
 

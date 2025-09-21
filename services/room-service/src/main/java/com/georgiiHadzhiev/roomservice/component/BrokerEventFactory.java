@@ -1,104 +1,83 @@
 package com.georgiiHadzhiev.roomservice.component;
 
+import com.georgiiHadzhiev.components.AbstractEventFactory;
 import com.georgiiHadzhiev.entity.EventType;
 import com.georgiiHadzhiev.events.BaseEvent;
 import com.georgiiHadzhiev.payloads.Payload;
-import com.georgiiHadzhiev.payloads.room.RoomCreatedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomDeletedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomUpdatedPayload;
-import com.georgiiHadzhiev.payloads.room.RoomViewedPayload;
+import com.georgiiHadzhiev.payloads.roomservice.*;
 import com.georgiiHadzhiev.roomservice.entity.Room;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
-public class BrokerEventFactory {
+public class BrokerEventFactory  extends AbstractEventFactory {
 
     private final RoomPayloadFactory payloadFactory;
 
     public BrokerEventFactory(RoomPayloadFactory payloadFactory) {
+        super("room-service","Room","room.events");
         this.payloadFactory = payloadFactory;
     }
 
-    public BaseEvent<RoomCreatedPayload> createRoomCreated(Room room) {
 
+
+    public BaseEvent<RoomCreatedPayload> createRoomCreated(Room room) {
         RoomCreatedPayload payload = payloadFactory.createRoomCreatedPayload(room);
-        return new BaseEvent<RoomCreatedPayload>(UUID.randomUUID(),
+        return buildEvent(
                 null,
-                "room-service",
-                Instant.now(),
                 room.getId().toString(),
-                "Room",
                 room.getVersion(),
-                "Room was created " + " by room-service",
+                "Room was created by room-service",
                 EventType.ROOM_CREATED,
-                payload,
-                "USER SERVICE WORK IN PROGRESS");
+                payload
+        );
     }
 
     public BaseEvent<RoomUpdatedPayload> createRoomUpdated(Room oldRoom, Room newRoom) {
-
         RoomUpdatedPayload payload = payloadFactory.createRoomUpdatedPayload(oldRoom, newRoom);
-        return new BaseEvent<RoomUpdatedPayload>(UUID.randomUUID(),
+        return buildEvent(
                 null,
-                "room-service",
-                Instant.now(),
                 newRoom.getId().toString(),
-                "Room",
                 newRoom.getVersion(),
-                "Room was updated " + " by room-service",
+                "Room was updated by room-service",
                 EventType.ROOM_UPDATED,
-                payload,
-                "USER SERVICE WORK IN PROGRESS");
-
+                payload
+        );
     }
 
     public BaseEvent<RoomDeletedPayload> createRoomDeleted(Room room) {
         RoomDeletedPayload payload = new RoomDeletedPayload();
-        return new BaseEvent<RoomDeletedPayload>(UUID.randomUUID(),
+        return buildEvent(
                 null,
-                "room-service",
-                Instant.now(),
                 room.getId().toString(),
-                "Room",
                 room.getVersion(),
-                "Room " + room.getId().toString() + " was deleted",
-                EventType.ROOM_VIEWED,
-                payload,
-                "USER SERVICE WORK IN PROGRESS");
+                "Room " + room.getId() + " was deleted",
+                EventType.ROOM_DELETED,
+                payload
+        );
     }
 
-    public BaseEvent<RoomViewedPayload> createRoomViewed(Room room){
-        return new BaseEvent<RoomViewedPayload>(UUID.randomUUID(),
+    public BaseEvent<RoomViewedPayload> createRoomViewed(Room room) {
+        return buildEvent(
                 null,
-                "room-service",
-                Instant.now(),
                 room.getId().toString(),
-                "Room",
                 room.getVersion(),
-                "Room " + room.getId().toString() + " was viewed",
+                "Room " + room.getId() + " was viewed",
                 EventType.ROOM_VIEWED,
-                new RoomViewedPayload(),
-                "USER SERVICE WORK IN PROGRESS");
+                new RoomViewedPayload()
+        );
     }
 
     public BaseEvent<RoomViewedPayload> createAllRoomViewed() {
-        RoomViewedPayload payload = new RoomViewedPayload();
-        return new BaseEvent<RoomViewedPayload>(UUID.randomUUID(),
+        return buildEvent(
                 null,
-                "room-service",
-                Instant.now(),
                 null,
-                "Room",
                 0,
-                "EMPTY",
+                "All rooms fetched",
                 EventType.ROOM_VIEWED,
-                payload,
-                "USER SERVICE WORK IN PROGRESS");
+                new RoomViewedPayload()
+        );
     }
-
-
 }
