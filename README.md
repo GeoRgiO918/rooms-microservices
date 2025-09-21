@@ -10,6 +10,8 @@ This is a **microservices project** built on **Spring Boot** with an **event-dri
 - **Object Storage:** MinIO
 - **Logging/Monitoring:** ELK Stack (Elasticsearch, Logstash, Kibana)
 
+Project scheme: [project_scheme.drawio](project_scheme.drawio)
+
 The application provides functionality for **room and booking inventory**.
 
 ## Services
