@@ -1,18 +1,21 @@
 package com.georgiiHadzhiev.fileservice.component;
 
 import com.georgiiHadzhiev.components.AbstractPayloadFactory;
+import com.georgiiHadzhiev.fileservice.dto.FileMetadataDto;
 import com.georgiiHadzhiev.fileservice.entity.FileMetadata;
 import com.georgiiHadzhiev.payloads.fileservice.FileDownloadedPayload;
 import com.georgiiHadzhiev.payloads.fileservice.FileUploadedPayload;
+import org.springframework.stereotype.Component;
 ;
 
+@Component
 public class FilePayloadFactory extends AbstractPayloadFactory {
 
 
-    public FileUploadedPayload createFileUploadedPayload(FileMetadata fileMetadata){
+    public FileUploadedPayload createFileUploadedPayload(FileMetadataDto fileMetadata){
         return new FileUploadedPayload(
-                fileMetadata.getRelatedObject().getEntityType(),
-                fileMetadata.getRelatedObject().getEntityId(),
+                fileMetadata.getRelatedEntityType(),
+                fileMetadata.getRelatedEntityId(),
                 fileMetadata.getStatus().name(),
                 fileMetadata.getFileType(),
                 fileMetadata.getOriginalFilename(),
@@ -21,7 +24,7 @@ public class FilePayloadFactory extends AbstractPayloadFactory {
         );
     }
 
-    public FileDownloadedPayload createFileDownloadedPayload(FileMetadata fileMetadata){
+    public FileDownloadedPayload createFileDownloadedPayload(FileMetadataDto fileMetadata){
         return new FileDownloadedPayload(
                 fileMetadata.getOriginalFilename(),
                 fileMetadata.getFileType(),

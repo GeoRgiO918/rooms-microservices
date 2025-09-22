@@ -33,12 +33,12 @@ public class EventProccesingService {
                 return;
             case ROOM_CREATED:
             case ROOM_UPDATED:
-                if (!isEntityExists) relatedObjectService.createRelatedObject(dto);
+                if (!isEntityExists) relatedObjectService.createRelatedObject(dto,event.getEventId());
                 return;
             case ROOM_DELETED:
                 if (isEntityExists) {
-                    metadataService.scheduleFilesForDeletion(dto);
-                    relatedObjectService.deleteRelatedObject(dto);
+                    metadataService.scheduleFilesForDeletion(dto,event.getEventId());
+                    relatedObjectService.deleteRelatedObject(dto,event.getEventId());
 
 
                 }

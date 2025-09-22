@@ -5,7 +5,7 @@ import com.georgiiHadzhiev.payloads.roomservice.RoomCreatedPayload;
 import com.georgiiHadzhiev.payloads.roomservice.RoomDeletedPayload;
 import com.georgiiHadzhiev.payloads.roomservice.RoomUpdatedPayload;
 import com.georgiiHadzhiev.payloads.roomservice.RoomViewedPayload;
-import com.georgiiHadzhiev.roomservice.component.BrokerEventFactory;
+import com.georgiiHadzhiev.roomservice.component.RoomEventFactory;
 import com.georgiiHadzhiev.roomservice.component.RoomMapper;
 import com.georgiiHadzhiev.roomservice.dto.RoomApplicationEvent;
 import com.georgiiHadzhiev.roomservice.dto.RoomDto;
@@ -24,11 +24,11 @@ import java.util.Optional;
 public class RoomService {
 
     private final RoomRepository repository;
-    private final BrokerEventFactory eventProvider;
+    private final RoomEventFactory eventProvider;
     private final RoomMapper mapper;
     private final ApplicationEventPublisher innerEventPublisher;
 
-    public RoomService(RoomRepository repository, BrokerEventFactory eventProvider, RoomMapper mapper, ApplicationEventPublisher innerEventPublisher) {
+    public RoomService(RoomRepository repository, RoomEventFactory eventProvider, RoomMapper mapper, ApplicationEventPublisher innerEventPublisher) {
         this.repository = repository;
         this.eventProvider = eventProvider;
         this.mapper = mapper;

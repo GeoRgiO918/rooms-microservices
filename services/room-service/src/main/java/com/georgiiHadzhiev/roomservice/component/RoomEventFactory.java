@@ -3,20 +3,16 @@ package com.georgiiHadzhiev.roomservice.component;
 import com.georgiiHadzhiev.components.AbstractEventFactory;
 import com.georgiiHadzhiev.entity.EventType;
 import com.georgiiHadzhiev.events.BaseEvent;
-import com.georgiiHadzhiev.payloads.Payload;
 import com.georgiiHadzhiev.payloads.roomservice.*;
 import com.georgiiHadzhiev.roomservice.entity.Room;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.UUID;
-
 @Component
-public class BrokerEventFactory  extends AbstractEventFactory {
+public class RoomEventFactory extends AbstractEventFactory {
 
     private final RoomPayloadFactory payloadFactory;
 
-    public BrokerEventFactory(RoomPayloadFactory payloadFactory) {
+    public RoomEventFactory(RoomPayloadFactory payloadFactory) {
         super("room-service","Room","room.events");
         this.payloadFactory = payloadFactory;
     }

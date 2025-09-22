@@ -1,16 +1,18 @@
 package com.georgiiHadzhiev.fileservice.service;
 
+import com.georgiiHadzhiev.events.BaseEvent;
+import com.georgiiHadzhiev.fileservice.component.FileEventFactory;
+import com.georgiiHadzhiev.fileservice.dto.FileApplicationEvent;
 import com.georgiiHadzhiev.fileservice.dto.FileCreateMetadataDto;
 import com.georgiiHadzhiev.fileservice.dto.FileMetadataDto;
-import com.georgiiHadzhiev.fileservice.dto.RelatedObjectDto;
-import com.georgiiHadzhiev.fileservice.entity.FileMetadata;
 import com.georgiiHadzhiev.fileservice.entity.FileStatus;
-import com.georgiiHadzhiev.fileservice.repository.FileMetadataRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.georgiiHadzhiev.payloads.fileservice.FileDeletedPayload;
+import com.georgiiHadzhiev.payloads.fileservice.FileDownloadedPayload;
+import com.georgiiHadzhiev.payloads.fileservice.FileSoftDeletedPayload;
+import com.georgiiHadzhiev.payloads.fileservice.FileUploadedPayload;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +25,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,12 +32,16 @@ public class FileService {
 
     private final S3Client s3Client;
     private final FileMetadataService fileMetadataService;
+    private final FileEventFactory eventFactory;
+    private final ApplicationEventPublisher innerEventPublisher;
 
 
 
-    public FileService(S3Client s3Client, FileMetadataService fileMetadataService) {
+    public FileService(S3Client s3Client, FileMetadataService fileMetadataService, FileEventFactory eventFactory, ApplicationEventPublisher innerEventPublisher) {
         this.s3Client = s3Client;
         this.fileMetadataService = fileMetadataService;
+        this.eventFactory = eventFactory;
+        this.innerEventPublisher = innerEventPublisher;
     }
 
     @Transactional
@@ -50,8 +54,8 @@ public class FileService {
         }catch (Exception e){
             throw e;
         }
-
-
+        BaseEvent<FileUploadedPayload> event = eventFactory.createFileUploaded(metadataDto);
+        innerEventPublisher.publishEvent(new FileApplicationEvent(event));
         return metadataDto;
 
 
@@ -67,6 +71,9 @@ public class FileService {
         );
 
         InputStreamResource resource = new InputStreamResource(s3InputStream);
+
+        BaseEvent<FileDownloadedPayload> event = eventFactory.createFileDownloaded(dto);
+        innerEventPublisher.publishEvent(new FileApplicationEvent(event));
         return resource;
     }
 
@@ -97,6 +104,8 @@ public class FileService {
         fileMetadata.setStatus(FileStatus.DELETED);
         fileMetadataService.updateFileMetadata(fileMetadata);
 
+        BaseEvent<FileDeletedPayload> event = eventFactory.createFileDeleted(fileMetadata);
+        innerEventPublisher.publishEvent(new FileApplicationEvent(event));
 
 
 
@@ -113,12 +122,13 @@ public class FileService {
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(objectKey) // здесь нужно использовать objectKey, а не bucketName
+                    .key(objectKey)
                     .contentType(file.getContentType())
                     .build();
 
             s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload file to S3/MinIO", e);
