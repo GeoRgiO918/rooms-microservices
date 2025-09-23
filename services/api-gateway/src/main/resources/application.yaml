@@ -1,0 +1,16 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: room-service-route
+          uri: http://localhost:8081
+          predicates:
+            - Path=/rooms/**
+        - id: file-service-route
+          uri: http://localhost:8082
+          predicates:
+            - Path=/file/**
