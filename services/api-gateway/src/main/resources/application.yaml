@@ -14,3 +14,8 @@ spring:
           uri: http://localhost:8082
           predicates:
             - Path=/file/**
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8282/realms/rooms-realm
