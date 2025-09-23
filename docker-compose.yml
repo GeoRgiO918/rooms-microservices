@@ -88,6 +88,45 @@ services:
     ports:
       - "5601:5601"
 
+  keycloak-db:
+    image: postgres:15
+    container_name: keycloak-db
+    restart: unless-stopped
+    mem_limit: 512M
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: developer
+      POSTGRES_DB: keycloak
+    volumes:
+      - keycloak_pgdata:/var/lib/postgresql/data
+
+  keycloak:
+    image: keycloak/keycloak:26.3
+    container_name: keycloak
+    command:
+      - start
+      - --db
+      - postgres
+      - --db-url
+      - jdbc:postgresql://keycloak-db:5432/keycloak
+      - --db-username
+      - postgres
+      - --db-password
+      - developer
+      - --hostname-strict
+      - "false"
+      - --http-enabled
+      - "true"
+    environment:
+      KC_FEATURES: preview
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    mem_limit: 512M
+    ports:
+      - "8282:8080"
+    depends_on:
+      - keycloak-db
+
   room-service:
     build:
       context: ./services/room-service
@@ -134,3 +173,6 @@ volumes:
   log_data:
     driver: local
   esdata:
+    driver: local
+  keycloak_pgdata:
+    driver: local
