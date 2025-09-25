@@ -71,7 +71,6 @@ public class AuthController {
                 .grantType(OAuth2Constants.PASSWORD)
                 .build();
 
-        // возвращаем полностью объект токена (access, refresh, expiresIn и т.д.)
         return ResponseEntity.ok(kcUser.tokenManager().getAccessToken());
     }
 }

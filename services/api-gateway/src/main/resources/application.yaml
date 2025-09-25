@@ -19,3 +19,11 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://localhost:8282/realms/rooms-realm
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.security.web: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty: DEBUG

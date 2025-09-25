@@ -164,6 +164,24 @@ services:
     volumes:
       - log_data:/usr/src/file-service/logs
 
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    mem_limit: 256M
+    ports:
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookingdb
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: rooms-realm
+      KEYCLOAK_CLIENT_ID: registration-app
+      KEYCLOAK_CLIENT_SECRET: n9AXyFpOcVgcZdcLxBjk8O9OMMnZsP17
+    volumes:
+      - log_data:/usr/src/auth-service/logs
+
 volumes:
   pgdata:
   kafka_data:
