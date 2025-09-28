@@ -5,6 +5,8 @@ spring:
     name: api-gateway
   cloud:
     gateway:
+      default-filters:
+        - TokenRelay
       routes:
         - id: room-service-route
           uri: http://localhost:8081
@@ -16,9 +18,18 @@ spring:
             - Path=/file/**
   security:
     oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8282/realms/rooms-realm
+      client:
+        registration:
+          keycloak-client:
+            provider: keycloak-provider
+            client-id: api-gateway
+            client-secret: H9tzBbQzbO72AGAmOfBt4oltb9bNHln8
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            scope: openid
+        provider:
+          keycloak-provider:
+            issuer-uri: http://localhost:8282/realms/rooms-realm
 
 logging:
   level:
