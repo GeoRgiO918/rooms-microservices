@@ -71,8 +71,8 @@ services:
     depends_on:
       - elasticsearch
     volumes:
-      - ./logstash/config/pipelines.yml:/opt/bitnami/logstash/config/pipelines.yml:ro
-      - ./logstash/pipeline/:/opt/bitnami/logstash/pipeline/:ro
+      - ./elk/logstash/config/pipelines.yml:/opt/bitnami/logstash/config/pipelines.yml:ro
+      - ./elk/logstash/pipeline/:/opt/bitnami/logstash/pipeline/:ro
       - log_data:/logs:ro
     command: ["logstash", "-r"]
 
@@ -82,7 +82,9 @@ services:
     container_name: kibana
     mem_limit: 512M
     environment:
-      NODE_OPTIONS: "--max-old-space-size=512" # в мегабайтах
+      - NODE_OPTIONS="--max-old-space-size=512" # в мегабайтах
+      - ELASTIC_PASSWORD=developer
+      - ELASTICSEARCH_USERNAME=elastic
     depends_on:
       - elasticsearch
     ports:
@@ -164,23 +166,6 @@ services:
     volumes:
       - log_data:/usr/src/file-service/logs
 
-  auth-service:
-    build:
-      context: ./services/auth-service
-      dockerfile: Dockerfile
-    container_name: auth-service
-    mem_limit: 256M
-    ports:
-      - "8083:8083"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bookingdb
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-      KEYCLOAK_SERVER_URL: http://keycloak:8080
-      KEYCLOAK_REALM: rooms-realm
-      KEYCLOAK_CLIENT_ID: registration-app
-      KEYCLOAK_CLIENT_SECRET: n9AXyFpOcVgcZdcLxBjk8O9OMMnZsP17
-    volumes:
-      - log_data:/usr/src/auth-service/logs
 
 volumes:
   pgdata:
