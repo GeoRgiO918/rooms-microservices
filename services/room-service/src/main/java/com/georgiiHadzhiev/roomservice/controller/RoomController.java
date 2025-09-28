@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
@@ -24,7 +25,7 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping
     public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto dto){
         log.info("Received create request for room:", dto);

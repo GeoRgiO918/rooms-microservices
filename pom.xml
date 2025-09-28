@@ -68,7 +68,6 @@
         <module>common</module>
         <module>services/file-service</module>
         <module>services/api-gateway</module>
-        <module>services/auth-service</module>
     </modules>
 
     <!-- Общие плагины сборки -->
